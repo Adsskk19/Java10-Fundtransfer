@@ -5,6 +5,7 @@ package com.example.fundtransfer.service;
 import com.example.fundtransfer.dto.StatementResponseDTO;
 import com.example.fundtransfer.entity.Account;
 import com.example.fundtransfer.entity.Transaction;
+import com.example.fundtransfer.exceptionHandler.ResourceNotFoundException;
 import com.example.fundtransfer.repository.AccountRepository;
 import com.example.fundtransfer.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +33,9 @@ public class StatementServiceImpl implements StatementService{
     public List<StatementResponseDTO> getStatements(Long accountId) {
 
 
-        Account account = accountRepository.findByAccountNumber(String.valueOf(accountId));
-
-               //todo .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
-
+        Account account = accountRepository
+                .findById(accountId)
+                .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
 
         List<Transaction> transactions = transactionRepository.findByAccountId(account.getId());
 
