@@ -1,8 +1,9 @@
 package com.example.fundtransfer.controller;
 
-import com.example.fundtransfer.entity.Customer;
+import com.example.fundtransfer.dto.CustomerDTO;
 import com.example.fundtransfer.service.CustomerService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,28 +12,36 @@ import java.util.List;
 @RequestMapping("/customers")
 public class CustomerController {
 
-    @Autowired
-    private CustomerService service;
+    private final CustomerService service;
 
-    @PostMapping
-    public Customer createCustomer(@RequestBody Customer customer) {
-        return service.saveCustomer(customer);
+    public CustomerController(CustomerService service) {
+        this.service = service;
     }
 
-    @GetMapping
-    public List<Customer> getAllCustomers() {
-        return service.getAllCustomers();
+    @PostMapping
+    public ResponseEntity<CustomerDTO> create(@Valid @RequestBody CustomerDTO dto) {
+        return ResponseEntity.ok(service.createCustomer(dto));
     }
 
     @GetMapping("/{id}")
-    public Customer getCustomer(@PathVariable Long id) {
-        return service.getCustomerById(id);
+    public ResponseEntity<CustomerDTO> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getCustomerById(id));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<CustomerDTO>> getAll() {
+        return ResponseEntity.ok(service.getAllCustomers());
     }
 
     @PutMapping("/{id}")
-    public Customer updateCustomer(@PathVariable Long id,
-                                   @RequestBody Customer customer) {
-        return service.updateCustomer(id, customer);
+    public ResponseEntity<CustomerDTO> update(@PathVariable Long id,
+                                              @Valid @RequestBody CustomerDTO dto) {
+        return ResponseEntity.ok(service.updateCustomer(id, dto));
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable Long id) {
+        service.deleteCustomer(id);
+        return ResponseEntity.ok("Customer deleted successfully");
+    }
 }
