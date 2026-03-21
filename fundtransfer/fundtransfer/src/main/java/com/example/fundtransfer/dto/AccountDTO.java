@@ -3,7 +3,7 @@ package com.example.fundtransfer.dto;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public class Account {
+public class AccountDTO {
 
     Long id;
     Long customerId;
@@ -11,7 +11,7 @@ public class Account {
     BigDecimal balance;
     LocalDateTime createdAt;
 
-    public Account(Long id, Long customerId, String accountNumber, BigDecimal balance, LocalDateTime createdAt) {
+    public AccountDTO(Long id, Long customerId, String accountNumber, BigDecimal balance, LocalDateTime createdAt) {
         this.id = id;
         this.customerId = customerId;
         this.accountNumber = accountNumber;
@@ -20,7 +20,7 @@ public class Account {
     }
 
 
-    public Account() {
+    public AccountDTO() {
     }
 
     public Long getId() {
