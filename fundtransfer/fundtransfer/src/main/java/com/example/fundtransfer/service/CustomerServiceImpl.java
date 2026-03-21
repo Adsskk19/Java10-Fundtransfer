@@ -1,4 +1,4 @@
-package com.example.fundtransfer.service.impl;
+package com.example.fundtransfer.service;
 
 import com.example.fundtransfer.dto.CustomerDTO;
 import com.example.fundtransfer.entity.Customer;
