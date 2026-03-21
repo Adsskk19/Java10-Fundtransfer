@@ -10,8 +10,6 @@ import java.util.List;
 @Service
 public interface CustomerService {
 
-    @Autowired
-    CustomerRepository repository;
 
     public Customer saveCustomer(Customer customer);
 
