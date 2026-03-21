@@ -1,0 +1,104 @@
+
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      # ---- Declarative routes (friendly paths) ----
+      routes:
+        - id: appointment_route
+          uri: lb://APPOINTMENT-SERVICE
+          predicates:
+            - Path=/appointments,/appointments/**
+          filters:
+            # Strip the external prefix and forward to your service base path
+            - RewritePath=/appointments(?<remaining>/.*)?, /api/appointments${remaining}
+            # (Optional) Circuit breaker with fallback
+#            - name: CircuitBreaker
+#              args:
+#                name: appointmentsCB
+#                fallbackUri: forward:/fallback/appointments
+#            # (Optional) Basic rate limit per client IP (requires Redis)
+#            - name: RequestRateLimiter
+#              args:
+#                key-resolver: "#{@ipKeyResolver}"
+#                redis-rate-limiter.replenishRate: 5
+#                redis-rate-limiter.burstCapacity: 10
+#                redis-rate-limiter.requestedTokens: 1
+
+        - id: notification_route
+          uri: lb://NOTIFICATION-SERVICE
+          predicates:
+            - Path=/notifications/**
+          filters:
+            - RewritePath=/notifications/(?<remaining>/.*)?, /api/notifications/${remaining}
+
+      # ---- Auto-create routes from Eureka (also accessible as /SERVICE-ID/**) ----
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+
+      # ---- CORS (adjust in prod) ----
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:3000"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+            allowCredentials: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
+  instance:
+    prefer-ip-address: true
+
+# Redis (only needed if RequestRateLimiter is used)
+#spring:
+#  data:
+#    redis:
+#      host: ${REDIS_HOST:localhost}
+#      port: ${REDIS_PORT:6379}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - info
+          - metrics
+          - prometheus
+          - gateway
+          - routes
+          - mappings
+          - env
+
+  endpoint:
+    health:
+      show-details: when_authorized
+    gateway:
+      enabled: true
+    prometheus:
+      enabled: true
+
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+
+# Helpful logs while tuning
+logging:
+  level:
+    org.springframework.cloud.gateway: INFO
+    org.springframework.cloud.loadbalancer: INFO
+    reactor.netty: WARN
+jwt:
+  secret: 9d1f7eab2c9a4bcd8f5e1a3c7b6e9f1029384756abcdef1234567890abcd
+  expiration: 3600000  # 1 hour

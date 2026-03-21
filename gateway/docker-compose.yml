@@ -1,0 +1,47 @@
+version: "3.9"
+
+name: gateway-stack
+
+services:
+  api-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: api-gateway
+    environment:
+      # ===============================
+      # Spring
+      # ===============================
+      SPRING_APPLICATION_NAME: api-gateway
+      SPRING_PROFILES_ACTIVE: docker
+      SERVER_PORT: "8080"
+      SERVER_ADDRESS: "0.0.0.0"
+
+      # ===============================
+      # Eureka
+      # ===============================
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      EUREKA_INSTANCE_PREFER_IP_ADDRESS: "true"
+      EUREKA_INSTANCE_HOSTNAME: "api-gateway"
+
+      # ===============================
+      # Gateway (Recommended)
+      # ===============================
+      SPRING_CLOUD_GATEWAY_DISCOVERY_LOCATOR_ENABLED: "true"
+      SPRING_CLOUD_GATEWAY_DISCOVERY_LOCATOR_LOWER_CASE_SERVICE_ID: "true"
+
+      # ===============================
+      # JWT Configuration
+      # ===============================
+      JWT_SECRET: mySuperSecretKey1234567890abcdef123456
+      JWT_EXPIRATION_MS: 3600000   # 1 hour expiration
+    ports:
+      - "8080:8080"
+    networks:
+      - msnet
+    restart: unless-stopped
+
+networks:
+  msnet:
+    external: true
+    name: msnet
