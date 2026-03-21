@@ -5,7 +5,7 @@ package com.example.fundtransfer.service;
 import com.example.fundtransfer.dto.StatementResponseDTO;
 import com.example.fundtransfer.entity.Account;
 import com.example.fundtransfer.entity.Transaction;
-import com.example.fundtransfer.exceptionHandler.ResourceNotFoundException;
+import com.example.fundtransfer.exception.ResourceNotFoundException;
 import com.example.fundtransfer.repository.AccountRepository;
 import com.example.fundtransfer.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
