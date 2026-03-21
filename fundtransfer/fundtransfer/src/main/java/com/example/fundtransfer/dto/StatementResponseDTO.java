@@ -1,6 +1,7 @@
 package com.example.fundtransfer.dto;
 
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 
@@ -8,7 +9,7 @@ public class StatementResponseDTO {
 
     private Long transactionId;
     private LocalDateTime transactionDate;
-    private Double amount;
+    private BigDecimal amount;
     private String description;
 
 
@@ -30,11 +31,11 @@ public class StatementResponseDTO {
     }
 
 
-    public Double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
