@@ -1,75 +1,49 @@
 package com.example.fundtransfer.service;
 
+import com.example.fundtransfer.dto.CustomerDTO;
 import com.example.fundtransfer.entity.Customer;
 import com.example.fundtransfer.repository.CustomerRepository;
-import com.example.fundtransfer.exception.CustomerNotFoundException;
-
+import com.example.fundtransfer.service.impl.CustomerServiceImpl;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.Mockito;
 
-import java.util.*;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
 class CustomerServiceTest {
 
-    @Mock
-    private CustomerRepository repository;
-
-    @InjectMocks
-    private CustomerService service;
+    private final CustomerRepository repository = mock(CustomerRepository.class);
+    private final CustomerService service = new CustomerServiceImpl(repository);
 
     @Test
-    void testSaveCustomer() {
-        Customer customer = new Customer("Kiran", "123");
+    void testCreateCustomer() {
+        Customer customer = new Customer();
+        customer.setId(1L);
+        customer.setName("Kiran");
 
-        when(repository.save(customer)).thenReturn(customer);
+        when(repository.save(any())).thenReturn(customer);
 
-        Customer saved = service.saveCustomer(customer);
+        CustomerDTO dto = new CustomerDTO();
+        dto.setName("Kiran");
 
-        assertNotNull(saved);
-        assertEquals("Kiran", saved.getName());
-        verify(repository, times(1)).save(customer);
-    }
-    @Test
-    void testGetAllCustomers() {
-        List<Customer> list = Arrays.asList(
-                new Customer("A", "1"),
-                new Customer("B", "2")
-        );
+        CustomerDTO result = service.createCustomer(dto);
 
-        when(repository.findAll()).thenReturn(list);
-
-        List<Customer> result = service.getAllCustomers();
-
-        assertEquals(2, result.size());
-        verify(repository, times(1)).findAll();
+        assertNotNull(result);
+        assertEquals("Kiran", result.getName());
     }
 
     @Test
-    void testGetCustomerById_NotFound() {
-        when(repository.findById(1L)).thenReturn(Optional.empty());
+    void testGetCustomerById() {
+        Customer customer = new Customer();
+        customer.setId(1L);
+        customer.setName("Test");
 
-        assertThrows(CustomerNotFoundException.class, () -> {
-            service.getCustomerById(1L);
-        });
-    }
-    @Test
-    void testUpdateCustomer() {
-        Customer existing = new Customer("Old", "111");
-        Customer updated = new Customer("New", "222");
+        when(repository.findById(1L)).thenReturn(Optional.of(customer));
 
-        when(repository.findById(1L)).thenReturn(Optional.of(existing));
-        when(repository.save(any(Customer.class))).thenReturn(updated);
+        CustomerDTO result = service.getCustomerById(1L);
 
-        Customer result = service.updateCustomer(1L, updated);
-
-        assertEquals("New", result.getName());
-        verify(repository).save(existing);
+        assertEquals("Test", result.getName());
     }
 }

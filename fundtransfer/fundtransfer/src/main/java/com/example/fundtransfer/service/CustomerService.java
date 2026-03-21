@@ -1,23 +1,18 @@
 package com.example.fundtransfer.service;
 
-import com.example.fundtransfer.entity.Customer;
-import com.example.fundtransfer.repository.CustomerRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import com.example.fundtransfer.dto.CustomerDTO;
 
 import java.util.List;
 
-@Service
 public interface CustomerService {
 
+    CustomerDTO createCustomer(CustomerDTO customerDTO);
 
-    public Customer saveCustomer(Customer customer);
+    CustomerDTO getCustomerById(Long id);
 
-    public List<Customer> getAllCustomers() ;
+    List<CustomerDTO> getAllCustomers();
 
-    public Customer getCustomerById(Long id);
+    CustomerDTO updateCustomer(Long id, CustomerDTO customerDTO);
 
-    public Customer updateCustomer(Long id, Customer updatedCustomer);
-
-
+    void deleteCustomer(Long id);
 }
