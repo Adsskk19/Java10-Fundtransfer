@@ -3,9 +3,9 @@ spring:
     name: fundtransfer
 #Postgres db properties
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
+    url: jdbc:postgresql://localhost:5433/postgres
     username: postgres
-    password: postgres
+    password: kiran
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
