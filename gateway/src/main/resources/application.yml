@@ -1,6 +1,6 @@
 
 server:
-  port: 8080
+  port: 8081
 
 spring:
   application:
@@ -13,7 +13,7 @@ spring:
         - id: fundtransfer
           uri: lb://FUNDTRANSFER-SERVICE
           predicates:
-            - Path=/accounts,/accounts/**
+            - Path=/accounts,/accounts/**,/accounts/*/statements
           filters:
             # Strip the external prefix and forward to your service base path
             - RewritePath=/accounts(?<remaining>/.*)?, /api/appointments${remaining}
