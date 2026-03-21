@@ -1,23 +1,18 @@
 package com.example.fundtransfer.dto;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 
-public class Customer {
+public class CustomerDTO {
 
     private Long id;
     private String name;
     private String password;
 
+    public CustomerDTO() {}
 
-    public Customer() {}
-
-    public Customer(String name, String password) {
+    public CustomerDTO(String name, String password) {
         this.name = name;
         this.password = password;
     }
-
 
     public Long getId() { return id; }
     public String getName() { return name; }

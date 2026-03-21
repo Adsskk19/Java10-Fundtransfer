@@ -10,13 +10,13 @@ spring:
     gateway:
       # ---- Declarative routes (friendly paths) ----
       routes:
-        - id: appointment_route
-          uri: lb://APPOINTMENT-SERVICE
+        - id: fundtransfer
+          uri: lb://FUNDTRANSFER-SERVICE
           predicates:
-            - Path=/appointments,/appointments/**
+            - Path=/accounts,/accounts/**
           filters:
             # Strip the external prefix and forward to your service base path
-            - RewritePath=/appointments(?<remaining>/.*)?, /api/appointments${remaining}
+            - RewritePath=/accounts(?<remaining>/.*)?, /api/appointments${remaining}
             # (Optional) Circuit breaker with fallback
 #            - name: CircuitBreaker
 #              args:
@@ -30,12 +30,12 @@ spring:
 #                redis-rate-limiter.burstCapacity: 10
 #                redis-rate-limiter.requestedTokens: 1
 
-        - id: notification_route
-          uri: lb://NOTIFICATION-SERVICE
-          predicates:
-            - Path=/notifications/**
-          filters:
-            - RewritePath=/notifications/(?<remaining>/.*)?, /api/notifications/${remaining}
+#        - id: notification_route
+#          uri: lb://NOTIFICATION-SERVICE
+#          predicates:
+#            - Path=/notifications/**
+#          filters:
+#            - RewritePath=/notifications/(?<remaining>/.*)?, /api/notifications/${remaining}
 
       # ---- Auto-create routes from Eureka (also accessible as /SERVICE-ID/**) ----
       discovery:

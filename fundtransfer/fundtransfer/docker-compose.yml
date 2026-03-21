@@ -1,0 +1,45 @@
+version: '3.9'
+
+services:
+  fundtransfer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fundtransfer-app
+    ports:
+      - "8081:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/fundtransfer_db
+      SPRING_DATASOURCE_USERNAME: fundtransfer
+      SPRING_DATASOURCE_PASSWORD: fundtransfer123
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: false
+      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.PostgreSQLDialect
+    depends_on:
+      - postgres
+    networks:
+      - fundtransfer-net
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:12
+    container_name: fundtransfer-postgres
+    environment:
+      POSTGRES_DB: fundtransfer_db
+      POSTGRES_USER: fundtransfer
+      POSTGRES_PASSWORD: fundtransfer123
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - fundtransfer-net
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  fundtransfer-net:
+    driver: bridge
